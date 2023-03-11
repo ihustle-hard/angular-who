@@ -1,3 +1,18 @@
+/*
+Copyright Google LLC. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that
+can be found in the LICENSE file at https://angular.io/license
+*/
+
+// Define a theme.
+$primary: theming.define-palette(palette.$purple-palette, 700, 500, 800);
+$accent:  theming.define-palette(palette.$green-palette, A200, A100, A400);
+
+@include typography.typography-hierarchy($theme); // src/app/app.component.scss
+// A relative path works
+@import '../style-paths/variables';
+// But now this works as well
+@import 'variables';
 @use '../all-theme';
 @use '../../core';
 @use '../palette';
@@ -5,16 +20,27 @@
 @use '../../typography/all-typography';
 @use '../../typography/typography';
 
-
 // Include non-theme styles for core.
-@include core.core();
+@include core.core("styles": [
+  {
+    "input": "src/external-module/styles.scss",
+    "inject": false,
+    "bundleName": "external-module"
+  }
+],
 
-// Define a theme.
-$primary: theming.define-palette(palette.$purple-palette, 700, 500, 800);
-$accent:  theming.define-palette(palette.$green-palette, A200, A100, A400);
-
-$theme: theming.define-dark-theme((
-  color: (
+$theme: theming.define-dark-theme(( "styles": [
+  "src/styles.css",
+  "src/more-styles.css",
+  { "input": "src/lazy-style.scss", "inject": false },
+  { "input": "src/pre-rename-style.scss", "bundleName": "renamed-style" },
+] 
+  color: ( "styles": [
+    "src/styles.css",
+    "src/more-styles.css",
+    { "input": "src/lazy-style.scss", "inject": false },
+    { "input": "src/pre-rename-style.scss", "bundleName": "renamed-style" },
+  ]
     primary: $primary,
     accent: $accent
   ),
@@ -24,11 +50,27 @@ $theme: theming.define-dark-theme((
 
 // Include all theme styles for the components.
 @include all-theme.all-component-themes($theme);
-
-@include typography.typography-hierarchy($theme);
-
-/*
-Copyright Google LLC. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that
-can be found in the LICENSE file at https://angular.io/license
-*/
+"scripts": [ "stylePreprocessorOptions": {
+  "includePaths": [
+    "src/style-paths"
+  ]
+}
+  {
+    "input": "src/external-module/main.js",
+    "inject": false,
+    "bundleName": "external-module"
+  }
+]); "styles": [
+  {
+    "input": "src/external-module/styles.scss",
+    "inject": false,
+    "bundleName": "external-module"
+  }
+],
+"scripts": [
+  {
+    "input": "src/external-module/main.js",
+    "inject": false,
+    "bundleName": "external-module"
+  }
+]
